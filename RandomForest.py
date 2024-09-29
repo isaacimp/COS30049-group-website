@@ -71,13 +71,6 @@ print(f"Unit Model - MSE: {mse_u}, R²: {r2_u}")
 def feature_importance(model, feature_names):
     return pd.DataFrame({'Feature': feature_names, 'Importance': model.feature_importances_}).sort_values(by='Importance', ascending=False)
 
-importance_h = feature_importance(rf_h, X_h.columns)
-importance_t = feature_importance(rf_t, X_t.columns)
-importance_u = feature_importance(rf_u, X_u.columns)
-
-print("House Feature Importance:\n", importance_h)
-print("Townhouse Feature Importance:\n", importance_t)
-print("Unit Feature Importance:\n", importance_u)
 
 
 def predict_price(model, distance, building_area, land_size, year_built, rooms, longtitude, lattitude):
