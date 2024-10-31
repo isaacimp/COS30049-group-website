@@ -1,10 +1,22 @@
 import { Building2 } from 'lucide-react';
 import PredictionForm from '../components/PredictionForm';
 import PredictionResult from '../components/PredictionResult';
-import { usePrediction } from '../hooks/usePrediction';
+import { usePrediction} from '../hooks/usePrediction';
+import { PredictionRequest, PredictionResponse } from '../types';
+import { useState } from 'react';
 
 export default function Predict() {
-  const { prediction } = usePrediction();
+  const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
+  const { getPrediction } = usePrediction();
+
+  const handlePrediction = async (formData: PredictionRequest) => {
+    try {
+      const result = await getPrediction(formData);
+      setPrediction(result);
+    } catch (error) {
+      console.error('Error fetching prediction:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -16,8 +28,8 @@ export default function Predict() {
               <h1 className="text-2xl font-bold text-gray-900">Property Price Prediction</h1>
             </div>
 
-            <PredictionForm />
-            {prediction && <PredictionResult prediction={prediction} />}
+            <PredictionForm onPredict ={handlePrediction} />
+            {prediction && <PredictionResult prediction = {prediction} />}
           </div>
         </div>
       </div>

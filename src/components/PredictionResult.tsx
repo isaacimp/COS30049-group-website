@@ -15,7 +15,7 @@ export default function PredictionResult({ prediction }: PredictionResultProps) 
           <div>
             <p className="text-sm text-gray-500">Estimated Price</p>
             <p className="text-2xl font-bold text-gray-900">
-              ${prediction./*price.*/toLocaleString()}
+              ${prediction.predicted_price.toLocaleString()}
             </p>
           </div>
         </div>

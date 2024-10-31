@@ -4,10 +4,14 @@ import { PredictionRequest } from '../types';
 import { usePrediction } from '../hooks/usePrediction';
 import LocationMap from './LocationMap';
 
-export default function PredictionForm() {
+interface PredictionFormProps {
+  onPredict: (formData: PredictionRequest) => void;
+}
+
+export default function PredictionForm({onPredict}: PredictionFormProps) {
   const { getPrediction, loading, error } = usePrediction();
   const [formData, setFormData] = useState<PredictionRequest>({
-    Type: 'house',
+    Type: "House",
     Distance: 0,
     BuildingArea: 0,
     LandSize: 0,
@@ -21,6 +25,7 @@ export default function PredictionForm() {
     e.preventDefault();
     try {
       await getPrediction(formData);
+      onPredict(formData);
     } catch (error) {
       // Error is handled by the hook
     }
@@ -69,9 +74,9 @@ export default function PredictionForm() {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             >
-              <option value="house">House</option>
-              <option value="apartment">Apartment</option>
-              <option value="townhouse">Townhouse</option>
+              <option value="House">House</option>
+              <option value="Unit">Unit</option>
+              <option value="Townhouse">Townhouse</option>
             </select>
           </div>
 
