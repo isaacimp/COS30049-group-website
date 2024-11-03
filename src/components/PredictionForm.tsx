@@ -9,7 +9,7 @@ interface PredictionFormProps {
 }
 
 export default function PredictionForm({onPredict}: PredictionFormProps) {
-  const { getPrediction, loading, error } = usePrediction();
+  const { loading } = usePrediction();
   const [formData, setFormData] = useState<PredictionRequest>({
     Type: "House",
     Distance: 0,
@@ -18,13 +18,12 @@ export default function PredictionForm({onPredict}: PredictionFormProps) {
     YearBuilt: 2000,
     Rooms: 1,
     Longitude: 144.9631,
-    Lattitude: -37.8136,
+    Latitude: -37.8136,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await getPrediction(formData);
       onPredict(formData);
     } catch (error) {
       // Error is handled by the hook
@@ -43,7 +42,7 @@ export default function PredictionForm({onPredict}: PredictionFormProps) {
     setFormData(prev => ({
       ...prev,
       Longitude: Number(longitude.toFixed(6)),
-      Lattitude: Number(latitude.toFixed(6)),
+      Latitude: Number(latitude.toFixed(6)),
     }));
   };
 
@@ -177,14 +176,14 @@ export default function PredictionForm({onPredict}: PredictionFormProps) {
           </div>
 
           <div>
-            <label htmlFor="Lattitude" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="Latitude" className="block text-sm font-medium text-gray-700">
               Latitude
             </label>
             <input
               type="number"
-              name="Lattitude"
-              id="Lattitude"
-              value={formData.Lattitude}
+              name="Latitude"
+              id="Latitude"
+              value={formData.Latitude}
               onChange={handleInputChange}
               step="0.000001"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"

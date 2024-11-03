@@ -1,12 +1,19 @@
+import json
 from RandomForest import RandomForestModel
 from fastapi import FastAPI, HTTPException, Depends, Request, Form
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
-from fastapi import BackgroundTasks
 import time
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
+import pandas as pd
+
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+]
 
 #Defining Pydantic Models
 class PredictionRequest(BaseModel):
@@ -17,12 +24,20 @@ class PredictionRequest(BaseModel):
     YearBuilt: int
     Rooms: int
     Longitude: float
-    Lattitude: float
+    Latitude: float
 
 #Database Connection
 def get_db():
     db = "Database Connection"
     return db
+
+app.add_middleware(
+        CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #Middleware, used to calculate the time it takes to process requests
 @app.middleware("http")
@@ -48,6 +63,7 @@ model = RandomForestModel()
 async def root():
     return {"message": "Welcome to our House Price Prediction Website"}
 
+#Main endpoint to get predictions and datasets
 @app.post("/predict/")
 async def predict( 
     Type: str = Form(...), 
@@ -57,11 +73,22 @@ async def predict(
     YearBuilt: int = Form(...), 
     Rooms: int = Form(...), 
     Longitude: float = Form(...), 
-    Lattitude: float = Form(...)
+    Latitude: float = Form(...)
     ):
     try:
-        price = model.predict_price(Type, Distance, BuildingArea, LandSize, YearBuilt, Rooms, Longitude, Lattitude)
-        return {"predicted_price": price}
+        price, datasetX, datasetY = model.predict_price(Type, Distance, BuildingArea, LandSize, YearBuilt, Rooms, Longitude, Latitude)
+        datasetX = json.loads(datasetX.to_json(orient = "records")) #Reformat to JSON to send back
+        datasetY = datasetY.to_list()
+        predictionFeatures = { #Return the form data back for use in charts
+            "Distance": Distance,
+            "BuildingArea": BuildingArea,
+            "Landsize": LandSize,
+            "YearBuilt": YearBuilt,
+            "Rooms": Rooms,
+            "Longitude": Longitude,
+            "Latitude":Latitude
+        }
+        return {"predicted_price": price, "datasetX":datasetX, "datasetY": datasetY, "predictionFeatures": predictionFeatures}
     except Exception as e:
         print("Prediction error:", e)
         raise HTTPException(status_code=500, detail="Prediction failed")

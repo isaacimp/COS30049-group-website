@@ -6,11 +6,23 @@ export interface PredictionRequest {
   YearBuilt: number;
   Rooms: number;
   Longitude: number;
-  Lattitude: number;
+  Latitude: number;
+}
+export interface PropertyFeatures {
+  Distance: number;
+  BuildingArea: number;
+  Landsize: number;
+  YearBuilt: number;
+  Rooms: number;
+  Longitude: number;
+  Latitude: number;
 }
 
 export interface PredictionResponse {
   predicted_price: number;
+  datasetX: PropertyFeatures[]
+  datasetY: number[]
+  predictionFeatures: PropertyFeatures
   timestamp: string;
   id: string;
   confidence: number;

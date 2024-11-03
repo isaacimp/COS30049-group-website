@@ -9,7 +9,8 @@ export const predictPrice = async (data: PredictionRequest): Promise<PredictionR
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value.toString());
     });
-
+    
+    // fetch predictions and datasets
     const response = await fetch(`${API_URL}/predict/`, {
       method: 'POST',
       body: formData,
@@ -24,25 +25,15 @@ export const predictPrice = async (data: PredictionRequest): Promise<PredictionR
     
     return {
       predicted_price: result.predicted_price,
+      datasetX: result.datasetX,
+      datasetY: result.datasetY,
+      predictionFeatures : result.predictionFeatures,
       timestamp: new Date().toISOString(),
       id: Math.random().toString(36).substr(2, 9),
       confidence: 0.95
     };
   } catch (error) {
     console.error('Prediction error:', error);
-    throw error;
-  }
-};
-
-export const fetchSuburbData = async () => {
-  try {
-    const response = await fetch(`${API_URL}/suburbs/`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch suburb data');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching suburb data:', error);
     throw error;
   }
 };

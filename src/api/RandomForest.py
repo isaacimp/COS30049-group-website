@@ -31,7 +31,7 @@ units = data[data['Type'] == 'u']
 
 #function to define X and Y variables for each data set
 def prepare_data(df):
-    X = df[['Distance', 'BuildingArea', 'Landsize', 'YearBuilt', 'Rooms', 'Longtitude', 'Lattitude']]
+    X = df[['Distance', 'BuildingArea', 'Landsize', 'YearBuilt', 'Rooms', 'Longitude', 'Latitude']]
     y = df['Price']
     return X, y
 
@@ -77,17 +77,23 @@ class RandomForestModel:
         #Save models usinh joblib
         joblib.dump([self.rf_h, self.rf_u, self.rf_t], 'models.joblib')
         
-    def predict_price(self, type, distance, building_area, land_size, year_built, rooms, longtitude, lattitude):
+    def predict_price(self, type, distance, building_area, land_size, year_built, rooms, longitude, latitude):
         
         #Load Models
         rf_h, rf_u, rf_t = joblib.load('models.joblib')
 
         if(type == "House"):
             model = rf_h
+            datasetX = X_h
+            datasetY = y_h
         elif(type == "Unit"):
             model = rf_u
+            datasetX = X_u
+            datasetY = y_u
         elif(type == "Townhouse"):
             model = rf_t
+            datasetX = X_t
+            datasetY = y_t
         else:
             raise ValueError("Invalid property type specified.")
         
@@ -98,15 +104,15 @@ class RandomForestModel:
             'Landsize': [land_size],
             'YearBuilt': [year_built],
             'Rooms': [rooms],
-            'Longtitude': [longtitude],
-            'Lattitude': [lattitude]
+            'Longitude': [longitude],
+            'Latitude': [latitude]
         })
         
         # Make the prediction
         predicted_price = model.predict(input_data)
         print(f"Predicted Price for Property: ${predicted_price[0]:,.2f}")
         
-        return predicted_price[0]
+        return predicted_price[0], datasetX, datasetY
     
 if __name__ == "__main__":
     model = RandomForestModel()
