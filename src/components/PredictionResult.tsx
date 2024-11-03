@@ -91,6 +91,31 @@ export default function PredictionResult({ prediction }: PredictionResultProps) 
         />
       </div>
       <div>
+        <Plot //Histogram to describe price distribution
+          data={[
+            {
+              x: price, 
+              type: 'histogram',
+              marker: { color: 'orange' },
+              name: 'Price Distribution',
+            }
+          ]}
+          layout={{
+            title: 'Distribution of Prices',
+            xaxis: { title: 'Price ($)' },
+            yaxis: { title: 'Frequency' },
+            font:{
+              size: 13
+            }
+          }}
+          config={{
+            responsive: true
+          }}
+
+          style={{ width: '100%', height: '100%'}}
+        />
+      </div>
+      <div>
       <Plot //A map chart to visualize the spread of points and price variation
           data={[
             {
@@ -107,7 +132,7 @@ export default function PredictionResult({ prediction }: PredictionResultProps) 
                   title: 'Price ($)',
                   x: -0.15
                 }
-              },
+              }
             },
             {         
               mode: 'markers',
@@ -135,31 +160,6 @@ export default function PredictionResult({ prediction }: PredictionResultProps) 
             mapboxAccessToken:'pk.eyJ1IjoiaXNhYWNtcCIsImEiOiJjbTJ3dWU1ZnAwYWF1MmlvaDY4dmd6dmNuIn0.V_uCzFC9c_d9_B5jOrsFQA'
           }}
           style={{ width: '100%', height: '100%'}}
-          />
-          </div>
-          <div>
-          <Plot //Histogram to describe price distribution
-            data={[
-              {
-                x: price, 
-                type: 'histogram',
-                marker: { color: 'orange' },
-                name: 'Price Distribution',
-              }
-            ]}
-            layout={{
-              title: 'Distribution of Prices',
-              xaxis: { title: 'Price ($)' },
-              yaxis: { title: 'Frequency' },
-              font:{
-                size: 13
-              }
-            }}
-            config={{
-              responsive: true
-            }}
-
-            style={{ width: '100%', height: '100%'}}
           />
       </div>
     </div>
